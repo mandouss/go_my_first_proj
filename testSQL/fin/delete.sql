@@ -1,0 +1,7 @@
+-- delete AccountShare
+DELETE FROM AccountShare
+WHERE ACCOUNT_ID='7942573' AND SYMBOL_ID='1';
+
+-- delete Contract
+DELETE FROM Contract
+WHERE CONTRACT_ID='1' AND ACCOUNT_ID='7942573' AND SYMBOL_ID='1';
