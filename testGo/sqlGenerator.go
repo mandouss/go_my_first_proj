@@ -19,6 +19,45 @@ type sqlQuery struct {
 	Conditions  []string
 }
 
+type sqlUpdate struct {
+	TableName string
+	Changes []string
+	Conditions  []string
+}
+
+func sqlUpdateGenerate(sql sqlUpdate) (sqlString string) {
+	sqlUpdatePrepare(sql)
+	return sqlUpdateToString(sql)
+}
+
+func sqlUpdatePrepare(sql sqlUpdate) {
+	stringsAddComma(sql.Changes)
+	stringsAddAnd(sql.Conditions)
+}
+
+func sqlUpdateToString(sql sqlUpdate) (sqlStr string) {
+	const tmpl = `UPDATE {{.TableName}} SET {{range .Changes}}{{.}}{{end}} WHERE {{range .Conditions}}{{.}}{{end}}`
+
+	t := template.New("sqlUpdate template")
+
+	t, err := t.Parse(tmpl)
+	if err != nil {
+		log.Fatal("Parse: ", err)
+		return
+	}
+
+	var tpl bytes.Buffer
+	err = t.Execute(&tpl, sql)
+	if err != nil {
+		log.Fatal("Execute: ", err)
+		return
+	}
+
+	sqlStr = tpl.String()
+
+	return
+}
+
 func sqlQueryGenerate(sql sqlQuery) (sqlString string) {
 	sqlQueryPrepare(sql)
 	return sqlQueryToString(sql)

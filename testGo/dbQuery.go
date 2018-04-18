@@ -4,6 +4,39 @@ import (
 	"database/sql"
 	"fmt"
 )
+
+func isSymbolExists(db *sql.DB, accountID string, symbolName string)(bool) {
+	var accountIDFoundNumber int
+	rows, success := QueryFromTable(db, []string{"COUNT(*)"}, []string{"symbol", "accountShare"}, []string{"account_ID="+wrapWithSingleQuote(accountID), "symbol_name="+wrapWithSingleQuote(symbolName), "symbol.symbol_id=accountShare.symbol_id"})
+	if success {
+		for rows.Next() {
+			err := rows.Scan(&accountIDFoundNumber)
+			checkErr(err)
+		}
+	}
+	rows.Close()
+	if(accountIDFoundNumber == 0) {
+		return false
+	}
+	return true
+}
+
+func isAccountIDExists(db *sql.DB, accountID string)(bool) {
+	var accountIDFoundNumber int
+	rows, success := QueryFromTable(db, []string{"COUNT(*)"}, []string{"account"}, []string{"account_ID="+wrapWithSingleQuote(accountID)})
+	if success {
+		for rows.Next() {
+			err := rows.Scan(&accountIDFoundNumber)
+			checkErr(err)
+		}
+	}
+	rows.Close()
+	if(accountIDFoundNumber == 0) {
+		return false
+	}
+	return true
+}
+
 func getLastContractIDbyAccountID(db *sql.DB, accountID int)(contractID int) {
 	rows, success := QueryFromTable(db, []string{"contract_id"}, []string{"ContractIDToAccountID"}, []string{"account_ID="+wrapWithSingleQuote(IntToString(accountID))})
 	if success {

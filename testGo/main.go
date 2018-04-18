@@ -13,9 +13,9 @@ func main() {
 	runFlag := []bool{true,false}
 
 	if runFlag[0] {
-		success1 := CreateOrderToAccount(db, 12345, "SPY", 20.00, -100.00)
-		success2 := CreateOrderToAccount(db, 12345, "PEK", 20.00, -100.00)
-		fmt.Println(success1, success2)
+		fmt.Println(CreateSymbolHandler(db,"SPY","12345","1000"))
+		fmt.Println(CreateSymbolHandler(db,"YYY","12345","1000"))
+
 	}
 	if runFlag[1] {
 		sql := sqlQuery{

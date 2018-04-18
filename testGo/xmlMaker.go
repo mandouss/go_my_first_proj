@@ -4,7 +4,6 @@ import (
 	"log"
 	"bytes"
 	"text/template"
-	"fmt"
 )
 
 type xmlNode struct {
@@ -13,6 +12,26 @@ type xmlNode struct {
 	Vals  []string
 	Content string
 	KVPairs []string
+}
+
+func generateErrorXmlNode(content string, keys []string, vals []string)(xmlStr string) {
+	xml := xmlNode{
+		Header:"error",
+		Keys:keys,
+		Vals:vals,
+		Content:content,
+	}
+	return xmlNodeToString(xml)
+}
+
+func generateXmlNode(header string, content string, keys []string, vals []string)(xmlStr string) {
+	xml := xmlNode{
+		Header:header,
+		Keys:keys,
+		Vals:vals,
+		Content:content,
+	}
+	return xmlNodeToString(xml)
 }
 
 func wrapWithDoubleQuotes(str string) string {
@@ -30,14 +49,12 @@ func fillXmlNodeWithKVPairs(xml *xmlNode) {
 			xml.KVPairs = append(xml.KVPairs, KVpair)
 		}
 	}
-	fmt.Println(xml.KVPairs)
 }
 
 func xmlNodeToString(xml xmlNode) (xmlStr string) {
 	const tmpl = `<{{.Header}}{{range .KVPairs}} {{.}}{{end}}>{{.Content}}</{{.Header}}>`
 
 	fillXmlNodeWithKVPairs(&xml)
-	fmt.Println(xml.KVPairs)
 
 	t := template.New("xmlNode template")
 
@@ -58,3 +75,5 @@ func xmlNodeToString(xml xmlNode) (xmlStr string) {
 
 	return
 }
+
+

@@ -46,7 +46,7 @@ func InsertToTable(db *sql.DB, tableName string, attrs []string, vals []string) 
 		Vals:   vals,
 	}
 	fmt.Println(sql.Attrs,sql.Vals)
-	success = ExecSql(db, sql)
+	success = ExecSqlInsert(db, sql)
 	return
 }
 

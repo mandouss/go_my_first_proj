@@ -15,10 +15,21 @@ func ConnectDB() (db *sql.DB) {
 	return
 }
 
-func ExecSql(db *sql.DB, sql sqlInsert) (success bool) {
+func ExecSqlUpdate(db *sql.DB, sql sqlUpdate) (success bool) {
+	sqlStr := sqlUpdateGenerate(sql)
+	fmt.Println(sqlStr)
+	return ExecSql(db,sqlStr)
+}
+
+func ExecSqlInsert(db *sql.DB, sql sqlInsert) (success bool) {
 	sqlStr := sqlInsertGenerate(sql)
 	fmt.Println(sqlStr)
-	stmt, err := db.Prepare(sqlStr)
+	return ExecSql(db,sqlStr)
+}
+
+
+func ExecSql(db *sql.DB, sql string) (success bool) {
+	stmt, err := db.Prepare(sql)
 	checkErr(err)
 	_, err = stmt.Exec()
 	checkErr(err)
@@ -28,6 +39,7 @@ func ExecSql(db *sql.DB, sql sqlInsert) (success bool) {
 
 func DoQuery(db *sql.DB, sql sqlQuery) (rows *sql.Rows, success bool) {
 	sqlStr := sqlQueryGenerate(sql)
+	fmt.Println(sqlStr)
 	rows, err := db.Query(sqlStr)
 	checkErr(err)
 	success = setSuccess(err)

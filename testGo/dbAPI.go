@@ -21,7 +21,7 @@ func CreateSymbolToAccount(db *sql.DB, ID int, symbolName string, amount float64
 		symbol_id = getSymIDFromSymName(db, symbolName)
 	}
 	//insert accountShare
-	success = InsertToAccountShare(db,12345,symbol_id,10.00)
+	success = InsertToAccountShare(db,ID,symbol_id,amount)
 
 	return success
 }
